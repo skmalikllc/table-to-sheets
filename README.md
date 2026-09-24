@@ -1,4 +1,8 @@
+<img src="https://raw.githubusercontent.com/skmalikllc/automation-portfolio/main/assets/cover-table-to-sheets.png" alt="table-to-sheets" width="100%">
+
 # Table to Sheets — CSV Exporter (Chrome MV3)
+
+`OPEN-SOURCE UTILITY`
 
 [![tests](https://github.com/skmalikllc/table-to-sheets/actions/workflows/tests.yml/badge.svg)](https://github.com/skmalikllc/table-to-sheets/actions/workflows/tests.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-black.svg)](LICENSE)
@@ -70,6 +74,18 @@ migration work where the source is a web page.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+  A[Page with tables] -->|click toolbar icon| B[content.js<br/>injected on demand]
+  B --> C[collectTables<br/>skip layout + single-row]
+  C --> D[tableToMatrix<br/>expand rowspan/colspan]
+  D --> E[preview in popup<br/>pick the right table]
+  E --> F[matrixToCsv<br/>RFC 4180 + UTF-8 BOM]
+  E --> G[matrixToTsv<br/>clipboard]
+  F --> H[CSV download]
+  G --> I[Ctrl+V into Google Sheets]
+```
+
 ```
 manifest.json      MV3 manifest — activeTab, scripting, downloads, clipboardWrite
 popup.html/.js     UI: table list, preview, export buttons
@@ -110,6 +126,48 @@ npm test
 7 tests cover `rowspan`/`colspan` expansion, CSV quoting (commas, quotes,
 newlines), TSV flattening, and table detection. The same command runs in CI on
 Node 22 and Node 24 — the badge above is that workflow.
+
+## Design decisions
+
+**Why the extraction core has no browser APIs.** `src/extract.js` is plain functions
+over arrays. That is what makes merged cells, CSV quoting and table detection
+testable in `node:test` under jsdom instead of requiring a browser harness — and
+those three are exactly where the bugs live.
+
+**Why layout tables are rejected rather than ranked.** A table whose cells contain
+another table is a layout artefact, not data. Offering it in the list and letting the
+user work it out wastes their time on every single page.
+
+**Why TSV for the clipboard and CSV for the file.** Google Sheets splits a pasted
+tab-separated payload into cells natively; a pasted CSV lands in one column. They are
+different jobs, so the extension does both rather than compromising on one.
+
+**Why the UTF-8 BOM.** Without it Excel misreads accented and Urdu text on open. It
+costs three bytes.
+
+## Limitations
+
+- **Static tables only.** A table rendered by a virtualised grid (rendering only the
+  visible rows) will export only what is in the DOM.
+- **One page at a time.** Paginated tables have to be exported page by page.
+- **No `<table>`, no export** — CSS-grid "tables" are not detected.
+- **Not on the Chrome Web Store.** Installation is unpacked, developer mode.
+- **Nested data tables** are treated as layout and skipped, which is right far more
+  often than it is wrong, but not always.
+
+## Contributing
+
+Issues and pull requests welcome. If you hit a table that exports wrongly, the most
+useful contribution is a failing test in `test/extract.test.js` with the minimal HTML
+that reproduces it.
+
+```bash
+npm install
+npm test
+```
+
+Please keep `src/extract.js` free of browser APIs — that constraint is what keeps the
+awkward parts testable.
 
 ## Security and privacy
 
