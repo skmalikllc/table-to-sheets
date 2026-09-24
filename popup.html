@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Table to Sheets</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #14140f;
+    --muted: #6b6b60;
+    --line: #e4e4dd;
+    --accent: #1f6f4a;
+    --accent-soft: #eaf3ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    width: 380px;
+    margin: 0;
+    padding: 14px 14px 16px;
+    font: 13px/1.45 -apple-system, "Segoe UI", system-ui, sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+  }
+  header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  h1 { font-size: 14px; margin: 0; letter-spacing: -0.01em; }
+  .count { color: var(--muted); font-size: 12px; }
+  .list { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .row {
+    display: flex; gap: 8px; align-items: center;
+    padding: 9px 10px; border-bottom: 1px solid var(--line);
+    cursor: pointer; background: #fff;
+  }
+  .row:last-child { border-bottom: 0; }
+  .row:hover { background: #fafaf7; }
+  .row.sel { background: var(--accent-soft); }
+  .row .name { flex: 1; font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .dim { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .preview {
+    margin-top: 10px; border: 1px solid var(--line); border-radius: 8px;
+    max-height: 150px; overflow: auto; background: #fff;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+  th { background: #faf9f5; font-weight: 600; position: sticky; top: 0; }
+  .actions { display: flex; gap: 8px; margin-top: 12px; }
+  button {
+    flex: 1; padding: 8px 10px; border-radius: 7px; border: 1px solid var(--line);
+    background: #fff; font: inherit; font-weight: 550; cursor: pointer; color: var(--fg);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .5; cursor: default; }
+  .status { margin-top: 9px; min-height: 16px; color: var(--muted); font-size: 12px; }
+  .empty { padding: 18px 12px; text-align: center; color: var(--muted); }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Table to Sheets</h1>
+    <span class="count" id="count"></span>
+  </header>
+  <div id="list" class="list"><div class="empty">Scanning page…</div></div>
+  <div class="preview" id="preview" hidden></div>
+  <div class="actions">
+    <button id="copy">Copy for Sheets</button>
+    <button id="csv" class="primary">Download CSV</button>
+  </div>
+  <div class="status" id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>
