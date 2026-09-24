@@ -1,17 +1,23 @@
 {
   "name": "table-to-sheets",
   "version": "1.0.0",
-  "description": "",
-  "main": "content.js",
-  "directories": {
-    "test": "test"
-  },
+  "description": "Chrome MV3 extension that exports any HTML table to CSV or straight into Google Sheets, expanding rowspan and colspan first.",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/extract.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test test/extract.test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "csv",
+    "google-sheets",
+    "html-table",
+    "data-migration"
+  ],
+  "author": "SK Malik",
+  "license": "MIT",
   "devDependencies": {
     "jsdom": "^30.1.1"
   }
