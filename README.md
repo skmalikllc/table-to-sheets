@@ -76,14 +76,14 @@ migration work where the source is a web page.
 
 ```mermaid
 flowchart LR
-  A[Page with tables] -->|click toolbar icon| B[content.js<br/>injected on demand]
-  B --> C[collectTables<br/>skip layout + single-row]
-  C --> D[tableToMatrix<br/>expand rowspan/colspan]
-  D --> E[preview in popup<br/>pick the right table]
-  E --> F[matrixToCsv<br/>RFC 4180 + UTF-8 BOM]
-  E --> G[matrixToTsv<br/>clipboard]
-  F --> H[CSV download]
-  G --> I[Ctrl+V into Google Sheets]
+  A["Page with tables"] -->|click toolbar icon| B["content.js<br/>injected on demand"]
+  B --> C["collectTables<br/>skip layout + single-row"]
+  C --> D["tableToMatrix<br/>expand rowspan/colspan"]
+  D --> E["preview in popup<br/>pick the right table"]
+  E --> F["matrixToCsv<br/>RFC 4180 + UTF-8 BOM"]
+  E --> G["matrixToTsv<br/>clipboard"]
+  F --> H["CSV download"]
+  G --> I["Ctrl+V into Google Sheets"]
 ```
 
 ```
